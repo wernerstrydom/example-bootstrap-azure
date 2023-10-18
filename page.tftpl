@@ -1,0 +1,66 @@
+<h2>Overview</h2>
+<table>
+<thead>
+    <tr>
+        <th>Property</th>
+        <th>Value</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td>Tenant ID</td>
+        <td>${ tenant_id }</td>
+    </tr>
+    <tr>
+        <td>Subscription Id</td>
+        <td>${ subscription_id }</td>
+    </tr>
+    <tr>
+        <td>Resource Group</td>
+        <td>${ resource_group_name }</td>
+    </tr>
+    <tr>
+        <td>Subscription Name</td>
+        <td>${ subscription_name }</td>
+    </tr>
+    <tr>
+        <td>Location</td>
+        <td>${ location }</td>
+    </tr>
+    <tr>
+        <td>Storage Account Name</td>
+        <td>${ storage_account_name }</td>
+    </tr>
+    <tr>
+        <td>Storage Container Name</td>
+        <td>${ storage_container_name }</td>
+    </tr>
+</tbody>
+</table>
+
+<h2>Backend</h2>
+<p>The backend configuration is stored in the terraform.tf file. The backend configuration is used to store the Terraform state file in Azure Storage. The backend configuration is required to be stored in a separate file from the rest of the Terraform configuration.</p>
+
+<ac:structured-macro ac:name="code" ac:schema-version="1" ac:macro-id="fbe21407-60aa-40ed-8954-fa9205fbae13"><ac:parameter ac:name="language">none</ac:parameter><ac:plain-text-body><![CDATA[
+terraform {
+    required_providers {
+        // providers omitted for brevity
+    }
+    backend "azurerm" {
+        resource_group_name  = "${ resource_group_name }"
+        storage_account_name = "${ storage_account_name }"
+        container_name       = "${ storage_container_name }"
+        key                  = "workload_name"
+    }
+}
+]]></ac:plain-text-body></ac:structured-macro>
+
+<p>Remember to change the key value to something unique for each Terraform configuration.</p>
+
+<h2>Secrets</h2>
+<p>The following secrets will be created</p>
+<ul>
+%{ for secret in secrets ~}
+    <li><b>${ secret.name }</b> (${ secret.scope }) ${ secret.description }</li>
+%{ endfor ~}
+</ul>
